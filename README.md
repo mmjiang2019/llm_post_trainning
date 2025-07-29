@@ -2,7 +2,7 @@
 # Model Training Process:
 Randomly Initialied Model ----pre-training----> 
 Base Model ----post-training----> 
-Instruct/Chat Model ----(continuous) post-training---> 
+Instruct/Chat Model ----(continual) post-training---> 
 Customized Model
 
 ## Base Model
@@ -41,7 +41,36 @@ Start from larger scale SFT dataset, filtering according to the quality of respo
 ### Principles of SFT
 #### Quality > Quantity
 1000 high-quality, diverse data works better than 1000000 mixed-quality data on improvement of SFT.
+
 ## Direct Preference Optimization
+DPO minimizes the contrasive loss which penalizes negative response and encourages positive respons.
+
+DPO loss is a cross entropy loss on the reward difference of a "re-parameterized" reward function.
+
+### Best Use Case for DPO
+#### Changing model behavior
+##### Making small modifications of model responses
+- Identity
+- Multilingual
+- Instruction following
+- Safety
+
+#### Improving model capabilities
+- Better than SFT in improving model capabilities due to contrastive nature.
+- Online DPO is better for improving model capabilities than offline DPO.
+
+### Principles of DPO Data Curation
+#### Correnction
+- Generate responses from original model as negative, make enhancements as positive responses.
+    - Example: I'm Llama (Negative) ----> I'm Athene (Positive)
+#### Online/On-Policy
+Your positive & negative examples can both come from your model's distribution. One may generate multiple responses from the current model for the same prompt, and collect the best response as positive sample and the worst response as negative sample.
+- One can choose best/worst response based on reward functions / human judgement.
+
+#### Avoid Overfitting
+- DPO is doing reward learning with can easily overfit to some shortcut when the preferred answers have shortcuts to learn compared with the non-preferred answers.
+    - Example: when positive sample always contains a few special words while negative samples do not.
+
 ## Online Reinforcement Learning
 
 # Full Fine-Tunning VS Parameter Efficient Fine-Tunning(PEFT)
