@@ -15,6 +15,7 @@ respond to instructions after learning responses from curated dataset.
 Specialized in certain domain or have specific behaviors after changing behaviors or enhancing capabilities.
 
 # Methods of Post-Traing
+
 ## Supervised Fine-Tuning
 Target of SFT
 
@@ -71,7 +72,65 @@ Your positive & negative examples can both come from your model's distribution. 
 - DPO is doing reward learning with can easily overfit to some shortcut when the preferred answers have shortcuts to learn compared with the non-preferred answers.
     - Example: when positive sample always contains a few special words while negative samples do not.
 
-## Online Reinforcement Learning
+## Online RL(Reinforcement Learning)
+Let Model Explore Better Responses by itself.
+
+Batch of Prompts ----> 
+
+Language Model --generate--> 
+
+Prompts, Responses ----> 
+
+Reward Function --Label--> 
+
+Prompts,Responses,Rewards
+
+### Reward Function
+#### Option 1: Trained Reward Model
+One post with two summaries judged by a human are fed to the reward model.
+
+The reward model calculates a reward r for earch summary.
+
+The loss is calculated based on the rewards and human label, and is used to update the reeard model.
+
+#### Option 2: Verifiable Reward
+##### Math
+Check if the response matches the ground truth.
+
+##### Coding
+Running unit tests.
+
+##### Summary of the two
+- requires preparation of the ground truth for math, unit tests for coding, or sandbox execution
+- More reliable than reward model in those domains
+- Used more often for training reasoning models
+
+
+### Methods for Online RL
+#### Policy Training in Online RL
+##### Proximal Policy Optimization (PPO)
+近端策略优化（PPO）是一种强化学习算法，用于训练策略以最大化预期回报。它通过使用一个旧策略和一个新策略之间的近似梯度来更新策略参数，从而保持新旧策略的相似性，并减少对新策略的过度拟合风险。
+
+最先由 ChatGPT 提出，并被广泛用于各种强化学习任务中。
+
+##### Group Relative Policy Optimization (GRPO)
+不再需要像PPO那样加入额外的价值函数近似，而是直接使用多个采样输出的平均奖励作为Baseline，显著减少了训练资源的使用。
+
+DeepSeek-R1 核心强化学习算法
+
+#### GRPO VS PPO
+##### Common Points
+- Both are very effective online RL algorithms!
+
+##### GRPO
+- Well-suited for binary (often correctness-based) reward
+- Requres larger amount of samples
+- Requires less GPU memory (no value model needed)
+
+##### PPO
+- Works well with reward model or binary reward
+- More sample efficient with a well-trained value model
+- Requires more GPU memory (value model)
 
 # Full Fine-Tunning VS Parameter Efficient Fine-Tunning(PEFT)
 Both of them can be used in any of the post-training methods.
