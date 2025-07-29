@@ -1,0 +1,13 @@
+[project]
+name = "llm-post-trainning"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "datasets>=4.0.0",
+    "pandas>=2.3.1",
+    "torch>=2.7.1",
+    "transformers>=4.54.0",
+    "trl>=0.20.0",
+]
