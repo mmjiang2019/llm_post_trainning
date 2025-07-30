@@ -17,6 +17,8 @@ import pandas as pd
 from tqdm import tqdm
 from trl import GRPOTrainer, GRPOConfig
 
+from IPython.display import display
+
 from llm_post_trainning.helper.utils import (
     load_model_and_tokenizer,
     generate_responses,
@@ -25,7 +27,7 @@ from llm_post_trainning.helper.utils import (
 
 def reward_func(completions, ground_truth, **kwargs):
     # Regular expression to capture content inside \boxed{}
-    matches = [re.search(r"\\boxed\{(.*?)\}", completion[0]['content']).group(1) for completion in completions]
+    matches = [re.search(r"\\boxed\{(.*?)\}", completion[0]['content']) for completion in completions]
     contents = [match.group(1) if match else "" for match in matches]
     # Reward 1 if the content is the same as the ground truth, otherwise reward 0
     return [1.0 if c == gt else 0.0 for c, gt in zip(contents, ground_truth)]

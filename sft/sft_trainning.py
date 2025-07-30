@@ -5,7 +5,7 @@ os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
 from datasets import load_dataset
 from trl import SFTTrainer, SFTConfig
 
-from llm_post_trainning.helper import (
+from llm_post_trainning.helper.utils import (
     load_model_and_tokenizer,
     display_dataset,
     test_model_with_questions,
@@ -16,6 +16,7 @@ USE_GPU = False
 model_name = "HuggingFaceTB/SmolLM2-135M"
 model, tokenizer = load_model_and_tokenizer(model_name, USE_GPU)
 
+# Loading SFT training dataset which will be used for SFT trainning
 train_dataset = load_dataset("banghua/DL-SFT-Dataset")["train"]
 if not USE_GPU:
     train_dataset=train_dataset.select(range(100))
@@ -30,9 +31,9 @@ sft_config = SFTConfig(
     gradient_accumulation_steps=8, # Number of steps before performing a backward/update pass to accumulate gradients.
     gradient_checkpointing=False, # Enable gradient checkpointing to reduce memory usage during training at the cost of slower training speed.
     logging_steps=2,  # Frequency of logging training progress (log every 2 steps).
-
 )
 
+# SFTTrainer
 sft_trainer = SFTTrainer(
     model=model,
     args=sft_config,
